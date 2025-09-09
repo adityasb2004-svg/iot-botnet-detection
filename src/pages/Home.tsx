@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 import cyberBg from "@/assets/cyber-bg.jpg";
 
 const Home = () => {
+  console.log("Home component rendering");
   const navigate = useNavigate();
+  console.log("useNavigate hook initialized");
 
   return (
     <div className="min-h-screen relative overflow-hidden">
