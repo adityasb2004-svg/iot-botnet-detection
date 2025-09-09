@@ -20,32 +20,45 @@ interface Device {
 
 const generateDevices = (fileName: string, totalDevices: number, blockedDevices: number) => {
   const devices: Device[] = [];
-  const deviceTypes = ["Smart TV", "IoT Device", "Router", "Wearable Device", "Camera", "Smart Lock"];
+  const deviceTypes = ["Smart TV", "IoT Sensor", "Router", "Wearable", "Camera", "Smart Lock"];
   const threatLevels: Device["threatLevel"][] = ["HIGH", "MEDIUM", "LOW"];
   
-  // Generate blocked devices
+  // Create hash for consistent device generation
+  const hash = fileName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  
+  // Generate blocked devices with varied names based on hash
   for (let i = 0; i < blockedDevices; i++) {
+    const deviceIndex = (hash + i) % deviceTypes.length;
+    const ipOctet3 = ((hash + i * 7) % 254) + 1;
+    const ipOctet4 = ((hash + i * 13) % 254) + 1;
+    
     devices.push({
-      id: `device_${i + 1}`,
-      name: `${deviceTypes[i % deviceTypes.length]} ${i + 1}`,
-      ipAddress: `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
-      deviceType: deviceTypes[i % deviceTypes.length],
-      confidence: Math.floor(Math.random() * 30) + 70,
-      lastSeen: `9/${Math.floor(Math.random() * 5) + 1}/2025`,
-      threatLevel: threatLevels[Math.floor(Math.random() * threatLevels.length)]
+      id: `threat_device_${i + 1}`,
+      name: `${deviceTypes[deviceIndex]} ${i + 1}`,
+      ipAddress: `192.168.${ipOctet3}.${ipOctet4}`,
+      deviceType: deviceTypes[deviceIndex],
+      confidence: 70 + ((hash + i * 3) % 30),
+      lastSeen: `9/${((hash + i) % 4) + 1}/2025`,
+      threatLevel: threatLevels[(hash + i * 5) % threatLevels.length]
     });
   }
   
-  // Generate clean devices
+  // Generate clean devices (show more based on total)
   const cleanDevices = totalDevices - blockedDevices;
-  for (let i = 0; i < Math.min(cleanDevices, 10); i++) { // Show only first 10 clean devices
+  const cleanDevicesToShow = Math.min(cleanDevices, Math.max(10, Math.floor(cleanDevices * 0.1))); // Show at least 10, or 10% of clean devices
+  
+  for (let i = 0; i < cleanDevicesToShow; i++) {
+    const deviceIndex = (hash + i + blockedDevices) % deviceTypes.length;
+    const ipOctet3 = ((hash + i * 11 + blockedDevices) % 254) + 1;
+    const ipOctet4 = ((hash + i * 17 + blockedDevices) % 254) + 1;
+    
     devices.push({
       id: `clean_device_${i + 1}`,
-      name: `${deviceTypes[i % deviceTypes.length]} ${i + blockedDevices + 1}`,
-      ipAddress: `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
-      deviceType: deviceTypes[i % deviceTypes.length],
-      confidence: Math.floor(Math.random() * 20) + 80,
-      lastSeen: `9/${Math.floor(Math.random() * 5) + 1}/2025`,
+      name: `${deviceTypes[deviceIndex]} ${i + blockedDevices + 1}`,
+      ipAddress: `192.168.${ipOctet3}.${ipOctet4}`,
+      deviceType: deviceTypes[deviceIndex],
+      confidence: 80 + ((hash + i * 7) % 20),
+      lastSeen: `9/${((hash + i) % 4) + 1}/2025`,
       threatLevel: "CLEAN"
     });
   }
@@ -67,6 +80,7 @@ const DeviceDetails = () => {
   
   const blockedDevices = devices.filter(d => d.threatLevel !== "CLEAN");
   const cleanDevices = devices.filter(d => d.threatLevel === "CLEAN");
+  const cleanDevicesToShow = cleanDevices.length;
   
   const filteredDevices = (deviceList: Device[]) => 
     deviceList.filter(device => 
@@ -104,14 +118,14 @@ const DeviceDetails = () => {
   };
 
   const DeviceCard = ({ device }: { device: Device }) => (
-    <Card className="p-4">
+    <Card className="p-4 cyber-glow border-border bg-card/80 backdrop-blur hover:bg-card/90 transition-all">
       <div className="flex items-start justify-between">
         <div className="space-y-2 flex-1">
           <div className="flex items-center gap-2">
             {getThreatIcon(device.threatLevel)}
             <h3 className="font-semibold">{device.name}</h3>
             {device.threatLevel !== "CLEAN" && (
-              <Badge variant={getThreatBadgeVariant(device.threatLevel)}>
+              <Badge variant={getThreatBadgeVariant(device.threatLevel)} className="cyber-glow">
                 {device.threatLevel}
               </Badge>
             )}
@@ -151,14 +165,14 @@ const DeviceDetails = () => {
       </header>
 
       {/* Main Content */}
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-6 py-8 cyber-grid min-h-screen">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Device Details</h1>
+            <h1 className="text-3xl font-bold text-foreground text-glow">Device Details</h1>
             <p className="text-muted-foreground mt-1">
               Dataset Analysis Complete: Processed {fileName} containing IoT network traffic data. 
-              Showing {Math.min(devices.length, 24)} devices from total dataset of {mockData.totalDevices} analyzed devices.
+              Showing {Math.min(devices.length, cleanDevicesToShow + blockedDevices.length)} devices from total dataset of {mockData.totalDevices} analyzed devices.
             </p>
           </div>
           
@@ -180,12 +194,14 @@ const DeviceDetails = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="all">All Devices ({devices.length})</TabsTrigger>
-            <TabsTrigger value="blocked" className="text-destructive">
+          <TabsList className="grid w-full grid-cols-3 bg-secondary/50 backdrop-blur">
+            <TabsTrigger value="all" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              All Devices ({devices.length})
+            </TabsTrigger>
+            <TabsTrigger value="blocked" className="text-destructive data-[state=active]:bg-destructive data-[state=active]:text-destructive-foreground">
               ⚠ Blocked ({blockedDevices.length})
             </TabsTrigger>
-            <TabsTrigger value="clean" className="text-success">
+            <TabsTrigger value="clean" className="text-success data-[state=active]:bg-success data-[state=active]:text-success-foreground">
               ✓ Clean ({cleanDevices.length})
             </TabsTrigger>
           </TabsList>

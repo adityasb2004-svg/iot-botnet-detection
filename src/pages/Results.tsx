@@ -7,15 +7,52 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ShieldIcon } from "@/components/ui/icons";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
-// Mock data that varies based on file
+// Mock data that varies significantly based on file
 const generateMockData = (fileName: string) => {
-  const baseStats = {
-    totalDevices: Math.floor(Math.random() * 200) + 200,
-    blockedDevices: Math.floor(Math.random() * 20) + 10,
-    avgConfidence: Math.floor(Math.random() * 20) + 70
-  };
+  // Create a hash from filename for consistent but varied results
+  const hash = fileName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   
-  baseStats.totalDevices = baseStats.totalDevices + fileName.length * 3; // Vary by filename
+  // Use hash to create different scenarios
+  const scenario = hash % 5;
+  
+  let baseStats;
+  switch (scenario) {
+    case 0: // High threat scenario
+      baseStats = {
+        totalDevices: 450 + (hash % 100),
+        blockedDevices: 45 + (hash % 25),
+        avgConfidence: 85 + (hash % 10)
+      };
+      break;
+    case 1: // Medium threat scenario  
+      baseStats = {
+        totalDevices: 320 + (hash % 80),
+        blockedDevices: 18 + (hash % 15),
+        avgConfidence: 78 + (hash % 12)
+      };
+      break;
+    case 2: // Low threat scenario
+      baseStats = {
+        totalDevices: 200 + (hash % 60),
+        blockedDevices: 8 + (hash % 10),
+        avgConfidence: 92 + (hash % 8)
+      };
+      break;
+    case 3: // Large network scenario
+      baseStats = {
+        totalDevices: 600 + (hash % 150),
+        blockedDevices: 35 + (hash % 30),
+        avgConfidence: 76 + (hash % 15)
+      };
+      break;
+    default: // Mixed scenario
+      baseStats = {
+        totalDevices: 287 + (hash % 90),
+        blockedDevices: 14 + (hash % 18),
+        avgConfidence: 82 + (hash % 18)
+      };
+  }
+  
   const cleanDevices = baseStats.totalDevices - baseStats.blockedDevices;
   
   return {
@@ -49,7 +86,7 @@ const Results = () => {
   const [mockData] = useState(() => generateMockData(fileName));
 
   const StatCard = ({ title, value, color, subtitle }: { title: string; value: string | number; color: string; subtitle?: string }) => (
-    <Card className="p-6">
+    <Card className="p-6 cyber-glow border-border bg-card/80 backdrop-blur">
       <div className="space-y-2">
         <p className="text-sm text-muted-foreground">{title}</p>
         <p className={`text-3xl font-bold ${color}`}>{value}</p>
@@ -87,9 +124,9 @@ const Results = () => {
       </header>
 
       {/* Main Content */}
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-6 py-8 cyber-grid min-h-screen">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Analysis Results</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2 text-glow">Analysis Results</h1>
         </div>
 
         {/* Stats Cards */}
@@ -97,30 +134,30 @@ const Results = () => {
           <StatCard 
             title="Total Devices" 
             value={mockData.totalDevices}
-            color="text-primary"
+            color="text-primary text-glow"
           />
           <StatCard 
             title="Blocked Devices" 
             value={mockData.blockedDevices}
-            color="text-destructive"
+            color="text-destructive text-glow"
           />
           <StatCard 
             title="Clean Devices" 
             value={mockData.cleanDevices}
-            color="text-success"
+            color="text-success text-glow"
           />
           <StatCard 
             title="Avg. Confidence" 
             value={`${mockData.avgConfidence}.0%`}
-            color="text-warning"
+            color="text-warning text-glow"
           />
         </div>
 
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* Device Status Distribution */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Device Status Distribution</h3>
+          <Card className="p-6 cyber-glow border-border bg-card/80 backdrop-blur">
+            <h3 className="text-lg font-semibold mb-4 text-primary">Device Status Distribution</h3>
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
@@ -153,8 +190,8 @@ const Results = () => {
           </Card>
 
           {/* Threat Level Distribution */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Threat Level Distribution</h3>
+          <Card className="p-6 cyber-glow border-border bg-card/80 backdrop-blur">
+            <h3 className="text-lg font-semibold mb-4 text-destructive">Threat Level Distribution</h3>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={mockData.threatLevels}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
@@ -173,8 +210,8 @@ const Results = () => {
           </Card>
 
           {/* Device Types */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Device Types</h3>
+          <Card className="p-6 cyber-glow border-border bg-card/80 backdrop-blur">
+            <h3 className="text-lg font-semibold mb-4 text-warning">Device Types</h3>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={mockData.deviceTypes}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />

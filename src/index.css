@@ -2,69 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
-/* IoT Security Design System - Dark theme with cyber aesthetics */
+/* IoT Security Design System - Exact match to screenshots */
 
 @layer base {
   :root {
-    /* Dark Navy Background System */
-    --background: 220 25% 8%;
-    --foreground: 210 40% 98%;
+    /* Dark Navy Background System - matching screenshots exactly */
+    --background: 220 35% 8%;
+    --foreground: 210 50% 95%;
 
-    /* Card System - Dark with subtle borders */
-    --card: 220 24% 12%;
-    --card-foreground: 210 40% 98%;
+    /* Card System - Darker with proper contrast */
+    --card: 220 30% 11%;
+    --card-foreground: 210 50% 95%;
 
-    --popover: 220 24% 12%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 30% 11%;
+    --popover-foreground: 210 50% 95%;
 
-    /* Cyber Cyan Primary */
-    --primary: 186 100% 56%;
-    --primary-foreground: 220 25% 8%;
+    /* Bright Cyan Primary - matching screenshot cyan */
+    --primary: 186 100% 47%;
+    --primary-foreground: 220 35% 8%;
 
-    /* Subtle Secondary */
-    --secondary: 220 20% 18%;
-    --secondary-foreground: 210 40% 98%;
+    /* Darker Secondary */
+    --secondary: 220 25% 15%;
+    --secondary-foreground: 210 50% 95%;
 
-    /* Muted Elements */
-    --muted: 220 15% 25%;
-    --muted-foreground: 215 20% 65%;
+    /* Muted Elements - Better contrast */
+    --muted: 220 20% 20%;
+    --muted-foreground: 215 25% 70%;
 
-    /* Accent Cyan */
-    --accent: 186 100% 56%;
-    --accent-foreground: 220 25% 8%;
+    /* Bright Cyan Accent */
+    --accent: 186 100% 47%;
+    --accent-foreground: 220 35% 8%;
 
-    /* Threat Red */
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    /* Threat Red - Bright red for high contrast */
+    --destructive: 0 85% 55%;
+    --destructive-foreground: 210 50% 95%;
 
-    /* Borders and Inputs */
-    --border: 220 20% 22%;
-    --input: 220 20% 18%;
-    --ring: 186 100% 56%;
+    /* Borders and Inputs - Darker */
+    --border: 220 25% 18%;
+    --input: 220 25% 15%;
+    --ring: 186 100% 47%;
 
-    /* Success Green */
-    --success: 142 76% 36%;
-    --success-foreground: 210 40% 98%;
+    /* Success Green - Bright green */
+    --success: 142 85% 45%;
+    --success-foreground: 220 35% 8%;
 
-    /* Warning Yellow */
-    --warning: 38 92% 50%;
-    --warning-foreground: 220 25% 8%;
+    /* Warning Yellow - Bright yellow */
+    --warning: 45 100% 60%;
+    --warning-foreground: 220 35% 8%;
 
-    /* Chart Colors */
-    --chart-1: 186 100% 56%; /* Cyan */
-    --chart-2: 0 84% 60%;    /* Red */
-    --chart-3: 142 76% 36%;  /* Green */
-    --chart-4: 38 92% 50%;   /* Yellow */
-    --chart-5: 262 83% 58%;  /* Purple */
+    /* Chart Colors - High contrast */
+    --chart-1: 186 100% 47%; /* Cyan */
+    --chart-2: 0 85% 55%;    /* Red */
+    --chart-3: 142 85% 45%;  /* Green */
+    --chart-4: 45 100% 60%;  /* Yellow */
+    --chart-5: 262 85% 65%;  /* Purple */
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(220 25% 8%), hsl(220 30% 12%));
-    --gradient-cyber: linear-gradient(135deg, hsl(220 25% 8%), hsl(220 35% 15%));
-    --gradient-hero: linear-gradient(135deg, hsl(220 25% 8%), hsl(220 30% 10%));
+    /* Enhanced Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(220 35% 8%), hsl(220 40% 12%));
+    --gradient-cyber: linear-gradient(135deg, hsl(220 35% 8%), hsl(220 45% 15%));
+    --gradient-hero: linear-gradient(135deg, hsl(220 35% 8%) 0%, hsl(220 40% 10%) 50%, hsl(220 35% 8%) 100%);
 
-    /* Shadows */
-    --shadow-cyber: 0 10px 30px -10px hsl(186 100% 56% / 0.2);
-    --shadow-card: 0 4px 20px -4px hsl(220 25% 4% / 0.5);
+    /* Enhanced Shadows */
+    --shadow-cyber: 0 0 20px hsl(186 100% 47% / 0.3);
+    --shadow-card: 0 8px 25px -8px hsl(220 35% 4% / 0.6);
+    --shadow-glow: 0 0 40px hsl(186 100% 47% / 0.2);
 
     --radius: 0.75rem;
   }
@@ -79,13 +80,13 @@
     @apply bg-background text-foreground;
   }
 
-  /* Cyber animations */
+  /* Enhanced Cyber animations */
   @keyframes cyber-pulse {
     0%, 100% {
-      box-shadow: 0 0 20px hsl(186 100% 56% / 0.3);
+      box-shadow: 0 0 20px hsl(186 100% 47% / 0.3);
     }
     50% {
-      box-shadow: 0 0 30px hsl(186 100% 56% / 0.6);
+      box-shadow: 0 0 30px hsl(186 100% 47% / 0.6);
     }
   }
 
@@ -103,6 +104,15 @@
     }
   }
 
+  @keyframes glow {
+    0%, 100% {
+      text-shadow: 0 0 10px hsl(186 100% 47% / 0.5);
+    }
+    50% {
+      text-shadow: 0 0 20px hsl(186 100% 47% / 0.8);
+    }
+  }
+
   .cyber-glow {
     box-shadow: var(--shadow-cyber);
   }
@@ -113,5 +123,17 @@
 
   .animate-data-flow {
     animation: data-flow 2s ease-in-out infinite;
+  }
+
+  .text-glow {
+    animation: glow 3s ease-in-out infinite;
+  }
+
+  /* Background patterns */
+  .cyber-grid {
+    background-image: 
+      linear-gradient(hsl(186 100% 47% / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(186 100% 47% / 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
   }
 }
